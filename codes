@@ -86,5 +86,36 @@ vector<vector<int>> spiralMatrixIII(int R, int C, int r0, int c0) {
         }
         return ans;
     }
+//////////////////////////////////////////////////////////////
+// rotate the 2D matrix 90 degree in place no extra space using
+// 1. tranpose the matrix using upper transpose method 2 then swap the cols
 
+vector<vector<int>> transpose(vector<vector<int>>& A) {
+       
+        vector<vector<int>> ans(A[0].size() , vector<int>(A.size() , 0));
+        //tranpose
+        for(int i=0;i<A[0].size();i++)
+        {
+            for(int j=0;j<A.size();j++) // for upper trangular j=i;
+            {
+                ans[i][j]=A[j][i];
+       
+            }
+        }
+        //swap   
+        for(int i=0;i<ans.size();i++)
+        {
+            int r=0 , c=A.size()-1;
+            while(r<c){
+                int temp=ans[i][r];
+                ans[i][r]=ans[i][c];
+                ans[i][c]=temp;
+                r++;
+                c--;
+            }
+            
+        }
+        
+        return ans;
+    }
 
