@@ -1,1 +1,54 @@
 // code
+// spiral matrix 2 leetcode
+Input: 3
+Output:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+ vector<vector<int>> generateMatrix(int n) {
+        
+         int tne=n*n , a=1;
+       vector<vector<int>> ans(n, vector<int >(n,0));
+       int minr=0 , minc=0, maxr=n-1, maxc= n-1;
+       
+       while(minr<=maxr && minc<=maxc)
+       {
+           //left ---->  minr, ( minc - maxc)
+           for(int i= minc;i<=maxc  ;i++)
+           {
+               ans[minr][i] =a;
+               a++;
+           }
+           minr++;
+           //down       ( minr -maxr ),maxc
+            for(int i=minr;i<=maxr ;i++)
+           {
+               ans[i][maxc] =a;
+                a++;
+           }
+           maxc--;
+           //right <----- maxr ( maxc -minc)
+             for(int i=maxc;i>=minc ;i--)
+           {
+               ans[maxr][i] =a;
+                 a++;
+           }
+           maxr--;
+           //up        minc, (maxr , minr)
+             for(int i=maxr;i>=minr   ;i--)
+           {
+               ans[i][minc]= a;
+                 a++;
+           }
+           minc++;
+       }
+        
+      return ans;
+
+    }
+    
+////////////////////////////////////////////////////////////////
+
+
