@@ -119,3 +119,41 @@ vector<vector<int>> transpose(vector<vector<int>>& A) {
         return ans;
     }
 
+///////////////////////////////////////////
+single number 3
+
+Bit manipulation method(Intuitive approach) O(N) time 
+
+   int singleNumber(vector<int>& nums) {
+         
+       // Bit manipulation method: O( n ) 
+      /*  int one=0;
+        int two=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            one = (nums[i] ^ one ) & (~ two);
+            two = (nums[i] ^ two ) & (~ one);
+        }
+        return one; */
+        
+   
+        // counting set Bits  : O( 32* N )
+        // loop for all 32 bits then count the no of set bits for each ele by shifting them twice 
+        
+        int ans=0, c=0;
+        unsigned int shift=1;
+        for(int i=0;i<32;i++)
+        {
+            c=0;
+            for(int n: nums)
+            {
+                if(n & shift )  // counting the no of set bits
+                    c++; // count
+            }
+            if( c % 3 != 0)
+                ans += shift ;   // add values 1+2....
+                
+            shift *= 2;
+        }
+        return ans;
+    }
