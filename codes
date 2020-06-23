@@ -157,3 +157,29 @@ Bit manipulation method(Intuitive approach) O(N) time
         }
         return ans;
     }
+    
+  ////////////////////////////////////////////
+  single number 3 
+  
+   vector<int> singleNumber(vector<int>& nums) {
+      
+        vector<int> ans;
+       
+        int x=0,a=0,b=0;
+        for(int e: nums)
+            x ^= e;                 //1. xor all ele to delete all twice occurring ele 
+        
+        unsigned int rmb= x & ~(x - 1); //2. cut rightmost set bit
+        
+        for(int e:nums) // 3. divide them in two set 
+        {
+            if( ( e & rmb ) == 0)
+                b ^= e;
+            else
+                a ^= e;
+        }
+            ans.push_back(a);
+            ans.push_back(b);
+        return ans; 
+ 
+    }
