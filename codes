@@ -183,3 +183,47 @@ Bit manipulation method(Intuitive approach) O(N) time
         return ans; 
  
     }
+    ////////////////////////////////////////////////////
+    
+    count all nodes in complete binary tree:
+    
+    1st method but not gud for interview purpose: inorder preoder or postorder traversal  O(N)
+    int countNodes(TreeNode* root) {
+        
+       if(root == NULL) return -1;
+       return 1 + countNodes(root->left);
+        }
+        
+        // 2nd method with O( log(2N +1) * log(N+ 1) ) ~ O(logN * logN ) 
+        int countNodes(TreeNode* root) {
+        
+       // using the property of complete binary tree ie all the level till 2nd last are completely filled
+       // only in last level the nodes may or may not be filled with elements
+        // so there is two cases arrises 1 if( CBT = PBT ) perfect binary tree the no of nodes = 2^ level -1
+        // 2. if( CBT != PBT ) then calculate left extreme depth and right extreme depth if same then nodes = 2^        level -1   otherwise root->left  + root->right + 1 ans 
+       if(root == NULL) return 0;
+        // for left extreme depth 
+        int led=1;
+        TreeNode* l= root->left;
+        while(l)
+        {
+            l=l->left;
+            led += 1;
+        }
+        
+         // for right extreme depth 
+        int red=1;
+        TreeNode* r= root->right;
+        while(l)
+        {
+            r=r->right;
+            red += 1;
+        }
+        
+        if( led == red)
+        {
+           return  pow(2,led)-1;
+        }
+        
+        return 1 + countNodes(root->left) + countNodes(root->right);
+  }
