@@ -1,5 +1,6 @@
   int mySqrt(int x) {
         
+        // Square root O(log N) 
         if( x < 2)return x;
         int s=1;
         int e=x/2;
@@ -12,3 +13,12 @@
         }
         return e;
     }
+    
+    // square root with precision:
+    
+    int guess = n/2;
+    while( math.abs( guess * guess - n) > p)
+    {
+    guess = (guess - n/guess ) /2
+    }
+    return guess;
