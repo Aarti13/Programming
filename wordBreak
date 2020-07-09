@@ -1,0 +1,113 @@
+ 
+ //Recursion Ans :
+ bool isPresent ( string s, vector<string>& dict )
+    {
+    for( int i=0 ; i< dict.size() ; i++ )
+    {
+        if( s.compare( dict[i] )==0)
+        return true;
+    }
+    return false;
+    }
+  
+    bool wordBreak(string s, vector<string>& wordDict) {
+        
+        bool ans = false;
+        if( s.length() == 0) return true;
+        
+        string w ="";
+     
+        for( int i=0; i<s.length() ; i++){
+            w += s[i];
+            if( isPresent(w, wordDict)){
+                
+                string ros= s.substr(i+1);
+               ans =  wordBreak( ros , wordDict );
+                if( ans == true ) return true;
+            }
+        }
+        return ans;
+    }
+    
+    // Method 2: using unordered Set
+    //WORDBREAK 
+    
+void wordbreak(string ques, string ans, unordered_set<string>& dictionary)
+{
+    if(ques.length() == 0)
+    {
+        cout << ans << endl;
+        return;
+    }
+
+    for(int i = 1; i <= ques.length(); i++)
+    {
+        string prefix = ques.substr(0, i);
+        if(dictionary.count(prefix) == 1)
+        {
+            string ros = ques.substr(i, ques.length() - prefix.length());
+            wordbreak(ros, ans + prefix + "-" , dictionary);
+        }
+    }
+}
+
+
+// main part 
+
+    unordered_set<string> dictionary;
+    dictionary.insert("man");
+    dictionary.insert("go");
+    dictionary.insert("mango");
+    dictionary.insert("ice");
+    dictionary.insert("icecream");
+    dictionary.insert("cream");
+    dictionary.insert("sam");
+    dictionary.insert("sung");
+    dictionary.insert("samsung");
+    wordbreak("mangosamsungicecream", "", dictionary);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   // for return it into a vector
+   I/P 
+   "catsanddog"
+    ["cat", "cats", "and", "sand", "dog"]
+    
+    o/p   ["cat sand dog","cats and dog"]
+    
+    
+    vector<string> wordBreak(string s, vector<string>& wordDict)  {
+        
+        if( s.length() == 0) {
+            vector<string> ans ;
+           ans.push_back("");
+            return ans;
+        }
+        
+        string w ="";
+        vector<string> myans ;
+        
+        for( int i=0; i<s.length() ; i++){
+            w += s[i];
+            if( isPresent(w, wordDict)){
+                
+                string ros= s.substr(i+1);
+               vector<string> Recans =  wordBreak( ros , wordDict );
+                for( string s: Recans)
+                {
+                    if( s.length() == 0)
+                        myans.push_back( w+ s );
+                    else
+                        myans.push_back( w+ " "+ s );
+                }
+            }
+        }
+        return myans;
+    }
