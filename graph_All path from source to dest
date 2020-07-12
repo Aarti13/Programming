@@ -1,0 +1,27 @@
+    Input: [[1,2], [3], [3], []] 
+    Output: [[0,1,3],[0,2,3]] 
+    
+    vector<vector<int>> ans;
+    vector<int> temp;
+    
+    void allpath(vector<vector<int>>& graph , int src  )
+     {
+         temp.push_back(src); 
+         
+         if( src == graph.size()-1 ) 
+         {
+             ans.push_back(temp);
+         }
+         
+         for( int i = 0 ; i< graph[src].size() ; i++)
+            {
+                allpath(graph ,graph[src][i] );
+            }
+          temp.pop_back(); 
+     }
+    
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph ) {
+        
+        allpath(graph , 0);
+        return ans;
+    }
