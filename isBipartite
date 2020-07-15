@@ -1,0 +1,66 @@
+class Solution {
+public:
+   
+    class Bpair
+    {
+        public:
+        int v;
+        int l;
+        
+        Bpair(int v , int l)
+        {
+            this->v=v;
+            this->l=l;
+        }
+        
+    };
+    bool isBipart(vector<vector<int>>& graph , int src ,  vector<int> & vis)
+    {
+        queue<Bpair> que;
+        Bpair bp(src , 1);
+        que.push( bp );
+        
+        while(!que.empty())
+        {
+            Bpair rem = que.front();
+            que.pop();
+            
+            if(  vis[rem.v]!= 0 )
+            {
+                int n =vis[rem.v];
+                int lo= rem.l;
+                if( n %2 != lo%2 )
+                {
+                    return false;
+                }
+            }
+            vis[rem.v]=rem.l;
+            
+            for( int i =0;i<graph[rem.v].size() ; i++)
+            {
+                if(vis[ graph[rem.v][i] ] == 0)
+                {
+                    Bpair rp( graph[rem.v][i] , rem.l+1);
+                    que.push(rp);
+                }
+            }
+        }
+        return true;
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+        
+      vector<int> visited(graph.size(), 0);
+        
+        for(int v = 0; v < graph.size(); v++)
+         {
+            if(visited[v] == 0)
+           {   
+            bool isBip = isBipart(graph ,v, visited);
+                
+            if(isBip == false)  return false;
+          }
+         }
+
+    return true;
+    }
+};
