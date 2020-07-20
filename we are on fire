@@ -1,0 +1,51 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int m , n , q;
+int ln=0;
+
+
+void we_are_on_fire(int r, int c,vector<vector<int> >& arr)
+{
+    arr[r][c]=2;
+    ln--;
+
+    if( r-1>=0 && arr[r-1][c]==1)
+        we_are_on_fire(r-1,c,arr);
+    if( c-1>=0 && arr[r][c-1]==1)
+        we_are_on_fire(r,c-1,arr);
+    if( r+1<m && arr[r+1][c]==1)
+        we_are_on_fire(r+1,c,arr);
+    if( c+1<n && arr[r][c+1]==1)
+        we_are_on_fire(r,c+1,arr);
+}
+
+int main()
+{
+    cin>>m>>n>>q;
+    vector<vector<int>> arr(m , vector<int> (n ,0));
+    for(int i =0;i<m;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            int val;
+            cin>>val;
+            arr[i][j]=val;
+            if(arr[i][j]==1)
+                 ln++;
+        }
+    }
+  
+    for(int i =0;i<q;i++)
+    {
+        int a,b;
+        cin>>a>>b;
+        if( a-1>=0 && b-1>=0 && a-1<m && b-1<n){
+        if(arr[a-1][b-1] == 1)
+            we_are_on_fire(a-1,b-1, arr);
+        cout<<ln<<endl;
+        }
+    }
+    return 0;
+}
