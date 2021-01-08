@@ -23,7 +23,11 @@ public static void main(String[] args) throws Exception {
     int[] nge = solve(a);
     display(nge);
  }
-
+// pop  ans  push
+// add last arr ele in stack 
+ // pop all ele while >= top
+ // an[i] = top
+ // push(arr[i]) 
  public static int[] solve(int[] arr){
   
     int[] nge = new int[arr.length];
