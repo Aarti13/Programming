@@ -1,4 +1,7 @@
 // has Duplicates brackets ie extra brcakets (a+ ((b+(d+e)))) true , (a+b+(i)) false
+// frstly add all the char to the stack
+// den if comes ) simply pop ele till ( ie there is ele in btw  
+// if ( comes at top den it has duplicate brackets 
 bool hasDuplicateBrackets(string & str)     //O(n)
 {
     stack<char> st;
