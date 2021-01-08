@@ -11,7 +11,7 @@ public class Main {
     int pivot = arr[hi];
     int pi = partition(arr , pivot , lo , hi);
 
-	if( pi > k )  quickSort(arr ,lo , pi-1 , k );
+	if( pi > k )  quickSort(arr ,lo , pi-1 , k ); // pivot index 
     	else if( pi < k ) quickSort(arr , pi+1 , hi , k);
 	else return arr[pi];
   }
