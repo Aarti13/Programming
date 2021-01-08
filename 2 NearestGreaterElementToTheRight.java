@@ -28,7 +28,7 @@ public static void main(String[] args) throws Exception {
  // pop all ele while >= top
  // an[i] = top
  // push(arr[i]) 
- public static int[] solve(int[] arr){
+ public static int[] solve(int[] arr){  // traverse from right
   
     int[] nge = new int[arr.length];
     Stack<Integer> st = new Stack<>();
@@ -47,5 +47,11 @@ public static void main(String[] args) throws Exception {
     }
    return nge;
  }
+  
+  // traverse from left to right 
+  // pop karna aur unka ans banana sath mein
+  // ie jo pop hota jae uska ans banta jae
+  // push
+  // top agar chota hua toh sabka ans top 
 
 }
