@@ -283,7 +283,9 @@ public class Main {
     return ans;
     }
     
-       public void removeDuplicates(){
+  // space constant as we are removind then adding in res
+  // time o(n)
+  public void removeDuplicates(){
       
       LinkedList res = new LinkedList();
       
@@ -294,11 +296,17 @@ public class Main {
           
           if( res.size() == 0 || res.tail.data != val )  res.addLast(val);
       }
+    // why?? becoz l1 mein kuch nhi bacha 
+    // this= res nhi karenge  as this is read only we
+    // can change only its property
       this.head= res.head;
       this.tail= res.tail;
       this.size = res.size;
     }
 
+  // without changing its relative order
+  // odd pehle even baad mein
+  // o(n) const space 
     public void oddEven(){
     
     LinkedList odd = new LinkedList();
@@ -376,12 +384,14 @@ public class Main {
       displayReverseHelper(temp.next);
       System.out.print(temp.data+" ");
     }
-  
+  // reverse using ptr 
     private void reversePRHelper(Node node){
       
       if( node == null ) return;
       reversePRHelper(node.next);
+  //wapas aate hue reverse order mein use karne ko milenge
      // if(node == tail ) // nothing to do
+    // den self ke next ka next khudpe pt karwaliya
       if(node != tail )  node.next.next = node;
     }
 
@@ -392,6 +402,89 @@ public class Main {
       head= tail;
       tail= temp;
     }
+  //O(n) space const
+  // right ko parameter rakha stcak mein banegaa
+  // left ko node banya heap mein banegaa
+      private boolean IsPalindromeHelper(Node right) {
+            if (right == null) {
+                return true;
+            }
+            boolean rres = IsPalindromeHelper(right.next);
+            if (rres == false) {
+                return false;
+            } else if (pleft.data != right.data) {
+                return false;
+            } else {
+                pleft = pleft.next;
+                return true;
+            }
+        }
+
+        Node pleft;
+        public boolean IsPalindrome() {
+            pleft = head;
+            return IsPalindromeHelper(head);
+        }
+  
+          public static int findIntersection(LinkedList one, LinkedList two) {
+            Node on = one.head;
+            Node tn = two.head;
+
+            if (one.size > two.size) {
+                for (int i = 0; i < one.size - two.size; i++) {
+                    on = on.next;
+                }
+            } else {
+                for (int i = 0; i < two.size - one.size; i++) {
+                    tn = tn.next;
+                }
+            }
+
+            while (on != tn) {
+                on = on.next;
+                tn = tn.next;
+            }
+
+            return on.data;
+        }
+        public static int addTwoLists(Node on, Node tn, int pio, int pit, LinkedList res) {
+            if (on == null && tn == null) {
+                return 0;
+            }
+
+            int carry = 0;
+            int data = 0;
+            if (pio > pit) {
+                carry = addTwoLists(on.next, tn, pio - 1, pit, res);
+                data = carry + on.data;
+            } else if (pio < pit) {
+                carry = addTwoLists(on, tn.next, pio, pit - 1, res);
+                data = carry + tn.data;
+            } else {
+                carry = addTwoLists(on.next, tn.next, pio - 1, pit - 1, res);
+                data = carry + on.data + tn.data;
+            }
+
+            carry = data / 10;
+            data = data % 10;
+
+            res.addFirst(data);
+            return carry;
+        }
+
+        public static LinkedList addTwoLists(LinkedList one, LinkedList two) {
+            LinkedList res = new LinkedList();
+
+            int carry = addTwoLists(one.head, two.head, one.size, two.size, res);
+            if (carry > 0) {
+                res.addFirst(carry);
+            }
+
+            return res;
+        }
+    }
+
+
 
   }
 
