@@ -24,6 +24,7 @@ public class Main {
     }
   }
 
+  //left child -1 right -2 pop -3
   public static Node construct(Integer[] arr) {
     Node root = new Node(arr[0], null, null);
     Pair rtp = new Pair(root, 1);
@@ -68,7 +69,6 @@ public class Main {
     if (node == null) {
       return;
     }
-
     String str = "";
     str += node.left == null ? "." : node.left.data + "";
     str += " <- " + node.data + " -> ";
@@ -113,7 +113,7 @@ public class Main {
   public static int height(Node node) {
     
     // find edge height
-     if( node == null ) return -1;
+     if( node == null ) return -1; //-1 for edges 0 for nodes
     
     int lh = height( node.left);  // left height
     int rh = height( node.right); // right height
@@ -122,7 +122,7 @@ public class Main {
     
   }  
 
-////// remove --- print --- array
+//IN AN Queue remove -- print -- add CHILD
   public static void levelOrder(Node node) {
     
     Queue<Node> q = new ArrayDeque<>();
@@ -140,14 +140,52 @@ public class Main {
         }
         System.out.println();
     }
-   
   }
+// IN , PRE , POST
+  public static void iterativePrePostInTraversal(Node node) {
+        Pair rtp = new Pair(node, 1);
+        Stack < Pair > st = new Stack < > ();
+        st.push(rtp);
 
+        String pre = "";
+        String post = "";
+        String in = "";
+        while (st.size() > 0) {
+            Pair top = st.peek();
+            if (top.state == 1) { // pre state++ left
+                pre += top.node.data + " ";
+                top.state++;
+
+                if (top.node.left != null) {
+                    Pair lp = new Pair(top.node.left, 1);
+                    st.push(lp);
+                }
+            } else if (top.state == 2) { // In state++ right
+                in += top.node.data + " ";
+                top.state++;
+
+                if (top.node.right != null) {
+                    Pair rp = new Pair(top.node.right, 1);
+                    st.push(rp);
+                }
+            } else { // Post state++ pop
+                post += top.node.data + " ";
+                top.state++;
+
+                st.pop();
+            }
+        }
+
+        System.out.println(pre);
+        System.out.println( in );
+        System.out.println(post);
+    }
+  
 /////// find node to root path
-
-      static ArrayList<Integer> path = new ArrayList<>();
+//O(n) in worst case,where the node is last node
+  static ArrayList<Integer> path = new ArrayList<>();
   public static boolean find(Node node, int data){
-    
+    // half euler will run 
     if( node == null ) return false;
     if( node.data == data ) 
     {
@@ -157,7 +195,7 @@ public class Main {
     
     boolean lans = find(node.left , data);
     if( lans ){
-        path.add(node.data);
+        path.add(node.data); // adding data from node till root
         return true;
     } 
     boolean rans = find(node.right , data);
@@ -179,44 +217,19 @@ public class Main {
   }
 
 /////// print all the nodes that are k distance away
-
+// O(n)
  public static void printKNodesDown(Node node, int k , Node blocker) {
      if(node == null || k<0  || node == blocker ) return ;
      if( k == 0 ) System.out.println( node.data);
      printKNodesDown(node.left , k-1  , blocker);
      printKNodesDown(node.right , k-1 , blocker );
   }
-  
-  public  static ArrayList<Node> path = new ArrayList<>();
-  public static boolean find(Node node, int data){
-    
-    if( node == null ) return false;
-    if( node.data == data ) 
-    {
-        path.add(node);
-        return true;
-    } 
-    
-    boolean lans = find(node.left , data);
-    if( lans ){
-        path.add(node);
-        return true;
-    } 
-    boolean rans = find(node.right , data);
-    if( rans ){
-        path.add(node);
-        return true;
-    } 
-    return false;
-  }
-  
-   public static void printKNodesFar(Node node, int data, int k) {
-      
+   // find node to root path above same question
+   public static void printKNodesFar(Node node, int data, int k) { 
     find(node , data  );  
     for( int i =0 ; i< path.size() ; i++ ){
         printKNodesDown( path.get(i) , k-i , i==0 ? null : path.get(i-1) );
-    }
-      
+    }  
   }
   
  ////////// path to leaf from root in given range 
@@ -234,10 +247,9 @@ public class Main {
         pathToLeafFromRoot( node.right , path+node.data+" " , sum+node.data , lo, hi);
   }
 
-/////////// transform to left clone tree  ie parent left child is copied in it become left child of left parent
+/////////// transform to left clone tree  ie parent left child is copied in it become left child or left parent
 //  a -> b , c b -> c , d original 
 //  a-> a , c  a-> b b-> b d 
-
   public static Node createLeftCloneTree(Node node){
         
         if( node == null ) return null ;
@@ -253,7 +265,6 @@ public class Main {
   } 
 
 // transform to normal from left clone tree
-
   public static Node transBackFromLeftClonedTree(Node node){
         
         if( node == null ) return null;
@@ -294,20 +305,24 @@ public class Main {
   }
 
 // Diameter of a binary tree
-
+// max no of edges btn two parts of the tree
  // First Method
     //O(N^2)
   public static int diameter1(Node node) {
     
     if( node == null ) return 0;
     
-    // max distance between two nodes of left height treee
+    // max dist btn two node on left side
     int ld = diameter1(node.left); //left diameter
-    // max distance between two nodes of right height tree
+    // max dist btn two node on right side
     int rd = diameter1(node.right); //right diameter
     
+    //sabse pehle logic
     // max distance between right deepest and left deepest tree
-    int h = height(node.left) + height(node.right) + 2;
+    // max dist btn left child and a node on left side
+    int h = height(node.left) + height(node.right) + 2;//(left-root-right)2 dist
+    // but hamesha root node centre nhi hota only left side mein bhi ans ho skta hai
+    
     int dia = Math.max( h , Math.max( ld , rd ) ) ;
     return dia;
   }
@@ -316,11 +331,8 @@ public class Main {
       int dia;
       int ht;
   }
-  
-  // second Method
-    //O(N)
+  // second Method  O(N)
    public static Dpair diameter2(Node node) {
-    
     if( node == null ) {
         Dpair dp = new Dpair();
         dp.dia = 0;
@@ -371,7 +383,6 @@ public class Main {
         int min ;
         boolean isbst;
     }
-    
     public static BSTPair isBST(Node node) {
         
         if( node == null ){
@@ -396,8 +407,7 @@ public class Main {
     }
    
 // is Balanced Tree
-// ie its left height - right height <= 1 diff should be 0 , 1 only 
-
+// ie its left height - right tree height <= 1 diff should be 0 , 1 only 
   static boolean isbt = true;
   public static int isBalancedTree( Node node ){
       
