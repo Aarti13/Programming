@@ -25,14 +25,15 @@ public class Main {
    public static ArrayList<Integer> mergeKSortedLists(ArrayList<ArrayList<Integer>> list){
       ArrayList<Integer> rv = new ArrayList<>();
       PriorityQueue<Pair> pq = new PriorityQueue<>();
-      
+      // add frst ele from every list in pq den compare dem
+// min val at top of PQ
      for( int i =0 ;i<list.size() ; i++ ){
         Pair p = new Pair( i , 0 , list.get(i).get(0) );
         pq.add(p);
      }
      
      while( pq.size() > 0 ){
-        Pair p = pq.remove();
+        Pair p = pq.remove(); rv.add(p.val);
         System.out.print( p.val+" ");
         p.di++;
         
