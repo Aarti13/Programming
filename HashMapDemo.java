@@ -229,7 +229,6 @@ public class Main {
         HashMap<Integer, Integer > hm = new HashMap<>();
         
         for(int i =0 ; i<arr1.length; i++){
-        
             if( hm.containsKey( arr1[i] )){
                 int freq = hm.get( arr1[i] ) ;
                 int nf= freq+1 ;// new freq
@@ -261,7 +260,6 @@ public class Main {
                 int nf= freq+1 ;// new freq
                 hm.put( arr1[i] , nf );
             }
-                
             else hm.put( arr1[i] ,1);
         }
         //traverse array 2 and check if it contains teh key den print it
@@ -270,14 +268,14 @@ public class Main {
                 {
                     System.out.println(arr2[i]);
                     int val = hm.get( arr2[i] );
-                    int nv = val-1;
+                    int nv = val-1; // dec the freq val
                     hm.put(arr2[i] ,nv );
                 }
         }
         
     }
 
-    // largest consecutive sequence of elements
+    // largest consecutive sequence of elements O(n)
     public static void lcse(int[] arr ){
         HashMap<Integer , Boolean> hm = new HashMap<>();
         // add true to all the values
