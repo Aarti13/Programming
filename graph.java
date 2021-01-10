@@ -1,3 +1,323 @@
+// graph
+// can be represented in two form 
+/*
+    1. Adjacency matrix : m*n matrix ver * ver (rep edges)
+        vertex < 10000
+    2. Adjacency List : array of arraylist (source , nbr , weight )
+*/
+// N/W based information for reaching from source to dest
+// 1. print all the paths
+// 2. shortest path- in terms of edges BFS
+//                in terms of wt - DIJIKSTRA 
+// 3. MST for connection of all nodes with min cabel required
+//          PRIMS , KRUSKAL
+// 4. files are dependent on other files so how to compile them
+//          topological sort
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// basic structure of graph
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Edge {
+        int src;
+        int nbr;
+        int wt;
+
+        Edge(int src, int nbr, int wt) {
+            this.src = src;
+            this.nbr = nbr;
+            this.wt = wt;
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int vtces = Integer.parseInt(br.readLine());
+        ArrayList < Edge > [] graph = new ArrayList[vtces];
+        for (int i = 0; i < vtces; i++) {
+            graph[i] = new ArrayList < > ();
+        }
+
+        int edges = Integer.parseInt(br.readLine());
+        for (int i = 0; i < edges; i++) {
+            String[] parts = br.readLine().split(" ");
+            int v1 = Integer.parseInt(parts[0]);
+            int v2 = Integer.parseInt(parts[1]);
+            int wt = Integer.parseInt(parts[2]);
+            graph[v1].add(new Edge(v1, v2, wt));
+            graph[v2].add(new Edge(v2, v1, wt));
+        }
+
+        int src = Integer.parseInt(br.readLine());
+        int dest = Integer.parseInt(br.readLine());
+    }
+}
+
+// checking if there is path from src to dest or not if yes what is the path
+bool hasPath(int src,int des,vector<bool> & vis,string s)
+{
+    if(src==des)
+        {
+            cout<<s+to_string(src);
+            return true;
+        }
+    vis[src]=true; //mark particular vertex through which we traverse 
+    // why because 1 - ask 0 to tell path
+    // as way 0 ask 1 to tell path and we stuck btwn them undirected graph
+    bool res=false;
+
+    for(int i=0;i<graph[src].size();i++)
+    {
+        int nbr=graph[src][i]->v;
+        if(!vis[nbr])
+            res=res|| hasPath(nbr,des,vis,s+to_string(src)+"->");
+    }
+    return res;
+}
+
+//all the path from src to dest
+int  allhasPath(int src,int des,vector<bool> & vis,string s)
+{
+    if(src==des)
+        {
+            cout<<s+to_string(src)<<endl;
+            return 1;
+        }
+    vis[src]=true; //mark particular vertex through which we traverse 
+    int count=0;
+
+    for(int i=0;i<graph[src].size();i++)
+    {
+        int nbr=graph[src][i]->v;
+        if(!vis[nbr])
+            count+= allhasPath(nbr,des,vis,s+to_string(src)+"->");
+    }
+    // why taki hum baki ke paths nikal pae
+    vis[src]=false;//unmark vertex
+    return count;
+}
+//all preorderpaths / post order
+void  preOrderPath(int src,int wt,vector<bool> & vis,string s)
+{
+    vis[src]=true; //mark particular vertex through which we traverse 
+    // for pre order
+    cout<<to_string(src)+":  "+s+to_string(src)+" @ "+to_string(wt)<<endl;
+
+    for(int i=0;i<graph[src].size();i++)
+    {
+        int nbr=graph[src][i]->v;
+        int w=graph[src][i]->w;
+        if(!vis[nbr])
+            preOrderPath(nbr,w+wt,vis,s+to_string(src)+"->");
+    }
+    // cout<<to_string(src)+":  "+s+to_string(src)+" @ "+to_string(wt)<<endl;// for post order
+    vis[src]=false;//unmark vertex
+}
+/* // on basis of wt
+Smallest path , largest path , just largest path(ceil) , just smallest path(floor) , 3rd largest path
+*/
+int maxwt=0;
+int minwt=10000000;
+string ans="";
+
+//maximum wt path
+void maxwtPath(int src,int des,int wt,vector<bool> & vis,string s)
+{
+    if(src==des)
+        {
+            if(maxwt<wt) // for min wt path f(minwt>wt )
+            {
+                maxwt=wt; // minwt= wt;
+                ans= s+to_string(src)+" @ "+to_string(maxwt);
+            }
+        }
+    vis[src]=true; //mark particular vertex through which we traverse 
+
+    for(int i=0;i<graph[src].size();i++)
+    {
+        int nbr=graph[src][i]->v;
+        int w=graph[src][i]->w;
+        if(!vis[nbr])
+             maxwtPath(nbr,des,w+wt,vis,s+to_string(src)+"->");
+    }
+
+    vis[src]=false;//unmark vertex
+}
+
+// Ceil , Floor  Path 
+int cd = 1e7;
+int fd = -1e7;
+string cp ="";
+string fp = "";
+
+void Ceil_Floor_Path( int src , int des , int wt , vector<bool> & vis , string s , int cf )
+{
+    if( src == des )
+    {
+        if( wt > cf && wt < cd ) // cf the val for just grt just larg
+        {
+            cd = wt ;// ceil
+            cp= s+to_string(src)+" @ "+to_string(cd);
+        }
+        if( wt < cf && wt > fd )
+        {
+            fd = wt ; // floor
+            fp= s+to_string(src)+" @ "+to_string(fd);
+        }
+    }
+
+    vis[src]=true;
+
+    for( int i = 0 ; i<graph[src].size() ; i++){
+        int nbr = graph[src][i]->v;
+        int w = graph[src][i]->w;
+        if(!vis[ nbr ])
+            Ceil_Floor_Path( nbr , des , w+wt , vis , s+to_string(src)+"->" , cf);
+    }
+    vis[src]= false;
+}
+/* 1) Initialize all vertices as not visited.
+    2) Do following for every vertex 'v'.
+       (a) If 'v' is not visited before, call DFSUtil(v)
+       (b) Print new line character
+
+    DFSUtil(v)
+    1) Mark 'v' as visited.
+    2) Print 'v'
+    3) Do following for every adjacent 'u' of 'v'.
+     If 'u' is not visited, then recursively call DFSUtil(u)
+     unmark
+*/
+// isconnected  (if gcc_count = 1)
+// iscyclic      (if (vis[s])  then return true)
+// tree ( if there exist no cycle )
+// forest ( if there is no cycle and gcc > 1 )
+
+// get Connected components in java  O(V+E)
+ boolean[] visited = new boolean[vtces];
+ ArrayList < ArrayList < Integer >> comps = new ArrayList < > (); // components
+        for (int v = 0; v < vtces; v++) {
+            if (visited[v] == false) {
+                ArrayList < Integer > comp = new ArrayList < > ();
+                gcc(graph, v, visited, comp);
+                comps.add(comp);
+            }
+        }
+ System.out.println(comps.size() == 1);
+
+    public static void gcc(ArrayList < Edge > [] graph, int src, boolean[] visited, ArrayList < Integer > comp) {
+        comp.add(src);
+        visited[src] = true;
+        for (Edge e: graph[src]) {
+            if (!visited[e.nbr]) {
+                gcc(graph, e.nbr, visited, comp);
+            }
+        }
+
+// hamiltinoan path ie we should traverse through all vertices only once 
+// hamiltonian path = cycle (when tehre is a direct link btw source and dest)
+// and find n the min wt path
+void hamiltonianPathCycle(int src,int osrc,int count,int wt,vector<bool> & vis,string s)
+{
+    if(count== graph.size()-1)   //hamiltonian Path
+    {
+         cout<<endl<<s+to_string(src)+" @ "+to_string(wt);
+         for(Edge * e: graph[src])       //hamiltonian Cycle
+         {
+             if(e->v == osrc)
+             cout<<"  CYCLE  ";
+         }
+         return ; 
+    }
+    vis[src]=true; //mark particular vertex through which we traverse 
+
+    for(int i=0;i<graph[src].size();i++)
+    {
+        int nbr=graph[src][i]->v;
+        int w=graph[src][i]->w;
+        if(!vis[nbr])
+             hamiltonianPathCycle(nbr,osrc,count+1,w+wt,vis,s+to_string(src)+"->");
+    }
+
+    vis[src]=false;//unmark vertex
+}
+
+ //********************************************************
+int counter=0;
+// Knight Tour  Path problem :
+// saarein cells ko visit karde without visiting any cell twice
+// moves : 2 stright den one left or right 
+void tour(vector<vector <int>> & box ,int r , int c , int csf)
+{
+    if( r<0 || c<0 || r<=box.size() || c<=box.size() || box[r][c] != 0) return ;
+    // csf : moves number
+    else if( csf == box.size()* box.size()- 1)
+    {
+           counter++;
+            cout<<"*******" <<counter<< "*******" ;
+            box[r][c] = csf;
+        // for display : 8*8 chess board
+            for(int i = 0; i < box.size(); i++){
+                for(int j = 0; j < box.size(); j++){
+                    cout<<box[i][j] <<endl;
+                }
+                cout<<endl;
+            }
+            box[r][c] = 0;
+            cout<<"*******" <<counter << "*******" ;
+            return;
+    } 
+    
+     box[r][c] = csf; // chess board
+    tour(box,r-2, c-1, csf+1);
+    tour(box,r-1, c-2 , csf+1);
+    tour(box,r+1, c-2 , csf+1);
+    tour(box,r+2, c-1 , csf+1);
+    tour(box,r+2, c+1 , csf+1);
+    tour(box,r+1, c+2 , csf+1);
+    tour(box,r-1, c+2 , csf+1);
+    tour(box,r-2, c+1 , csf+1);
+     box[r][c] = 0;
+}
+
+//*********************************************
+
+//BFS: (Breadth First Search )
+bool bfs(int s, int d){
+    vector<bool> visited (graph.size(), false);
+    queue<int> q;
+
+    q.push(s);
+    while(q.size() > 0){
+        // grmpa
+        int rem = q.front();
+        q.pop();
+
+        if(visited[rem] == true){
+            continue;
+        }
+        visited[rem] = true;
+        
+        if(rem == d){
+            return true;
+        }
+
+        for(int n = 0; n < graph[rem].size(); n++){
+
+            if(visited[graph[rem][n]->v] == false){
+                q.push(graph[rem][n]->v);
+            }
+        }
+    }
+
+    return false;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
