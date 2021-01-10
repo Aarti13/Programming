@@ -2,10 +2,12 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
+// implent two PQ left - contains chote half ka max ele
+  // right - bade half ka min ele
   public static class MedianPriorityQueue {
-    PriorityQueue<Integer> left;
-    PriorityQueue<Integer> right;
+    // 10 20 30 40 50 
+    PriorityQueue<Integer> left; //10 20 (30 top) 
+    PriorityQueue<Integer> right; // (40 top) 50 
 
     public MedianPriorityQueue() {
       left = new PriorityQueue<>(Collections.reverseOrder());
@@ -13,10 +15,10 @@ public class Main {
     }
 
     public void add(int val) {
-      
+      // size gap either 0 ,1
       if( right.size()>0 && val > right.peek() )  
         right.add(val);
-      else left.add(val);
+      else left.add(val); // default add at left
       
       if( right.size() - left.size() == 2 )
           left.add( right.remove() );
