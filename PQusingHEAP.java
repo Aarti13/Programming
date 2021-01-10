@@ -1,11 +1,11 @@
 // heap : heap order priority every parent has higher prior than its children (peek) O(1)
-	 CBT : Complete Binary Tree fill edge - 1 level full first ie add filling from left to right (add , remove )//logn
-	 MinHeap , MaxHeap
-	 left child index = 2parent +1 
-	 right child index = 2parent +2
-	 parent = child - 1 / 2
-	 CBT -> AL implementation -> Index formulate -> Parent path capability -> add at last O(n) than
-		upheapify call ie swap if child is > parent (logn) height n -> logn
+//	 CBT : Complete Binary Tree fill height - 1 level full first ie add filling from left to right (add , remove )//logn
+//	 MinHeap , MaxHeap
+//	 left child index = 2parent +1 
+//	 right child index = 2parent +2
+//	 parent = child - 1 / 2
+//	 CBT -> AL implementation -> Index formulate -> Parent path capability -> add at last O(n) than
+//		upheapify call ie swap if child is > parent (logn) height n -> logn
 
 // sol 1 
 // add : just add it O(1)
@@ -14,7 +14,7 @@
 // total complexity : add O(n) + remove , peek  n*n = O(n^2)
 
 // sol 2 
-// add : add it at right position O(n)
+// add : add it at right position O(n) 
 // remove : just remove O(1)
 // peek : O(1)
 // total complexity :  remove , peek n*n  + add  O(n) = O(n^2)
@@ -36,7 +36,7 @@ public PriorityQueue() {
 public PriorityQueue() {
       data = new ArrayList<>( int[] arr );
 	for( int val : arr ) data.add(val);   //O(n)
-	
+	// n/2 logo pe 0 kam hua n/4 pe 1 ka kam hua
 	for( int i = data.size() /2 -1 ; i>=0 ; i--)
 	downheapify(i);
     }
@@ -77,7 +77,7 @@ public class Main {
       upheapify( data.size()-1 );
     }
     
-    public void upheapify( int ci ){
+    public void upheapify( int ci ){ //log(n)
         
         if(ci == 0) return;
         int pi = ( ci - 1 )/2  ;// parent index
