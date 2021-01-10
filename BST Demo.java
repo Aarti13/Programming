@@ -157,7 +157,6 @@ public class Main {
     return node;
   } 
  // remove nodes with 0 , 1 , 2 childs
-
 public static Node remove(Node node, int data) {
         
         if( node == null ) return null;
@@ -166,7 +165,7 @@ public static Node remove(Node node, int data) {
         else{
             
             if( node.left != null && node.right != null ){
-                // 2 child
+                // 2 child find left side ka rightmost val nd swap with node
                 int m = max(node.left);
                 node.data = m;
                 node.left = remove(node.left , m );
@@ -180,9 +179,7 @@ public static Node remove(Node node, int data) {
                 // 1 child
                 return node.right ;
             }
-            else{
-                // 0 child 
-               return null;
+            else{ return null;
             }
         }
         return node;
@@ -217,9 +214,13 @@ public static Node remove(Node node, int data) {
   public static void pir(Node node, int d1, int d2) {
         
         if( node == null ) return ;
+     if( node.data < d1 && node.data < d2 )  pir( node.right , d1, d2 );
+     else if( node.data > d1 && node.data > d2 )  pir( node.left , d1, d2 );
+     else{
         pir( node.left , d1, d2 );
         if( node.data >= d1 && node.data <= d2 ) System.out.println( node.data +" ");
         pir(node.right , d1, d2 );
+     }
   }
 
 // target sum pairs
@@ -230,7 +231,7 @@ public static Node remove(Node node, int data) {
       if( node == null ) return;
       
       tsp(root , node.left , target );
-      int sum = target - node.data ;
+      int sum = target - node.data ; // find compliment
       
       if( node.data < sum){  // for non repeating pairs 
         if( find( root , sum) ) System.out.println( node.data +" "+ sum );
@@ -243,15 +244,15 @@ public static Node remove(Node node, int data) {
 // TC: n  SC: n
 
   public static void tsp(  Node node , ArrayList<int> list){
-      
+      // fill arraylist 
       if( node == null ) return;
-      
       tsp( node.left , list );
       list.add(node.data);
       tsp( node.right , list );
   } 
+   // den in main func
    int si = 0 ;
-    int ei = list.length - 1;
+   int ei = list.length - 1;
     while( si< ei){
         int left = list.get(si);
         int right = list.get(ei);
