@@ -47,41 +47,49 @@ void display()
 }
 
 //**************************   Tpological sort   ************************
-// topological sort where in directed a cyclic graph (u,v) u always come prior to v
+// topological sort :a permutation of all vtx in directed a cyclic graph (u,v) u always come prior to v
+// eg we have some work in some order : print specific order
 // DFS for traversal all the vertices
+// O(V+E)same as dfs with extra stack O(V)extra space is needed for the stack
+// 0123 , 456 graph  in stack 4560123
+// order of work is just opposite from topological sort
+// why use stack ??
+// pre mei print krle?? no because ans 0123456 but 3 depend on 4 so noooo
+// post mein print???  no because ans comes opp 3210654 wrong
 bool DFS(int src, vector<bool> & vis, vector<int> & stack , vector<bool> & cycle )
 {
     vis[src]=true;
-    cycle[src]=true;
-    bool res = false;
+   // cycle[src]=true;
+   // bool res = false;
 
     for(Edge *e: graph[src])
     {
         if(! vis[e->v])
           res = res || DFS(e->v, vis, stack , cycle);
-        else if( cycle[e->v])
-        return true;
+//         else if( cycle[e->v])
+//         return true;
     }
 
     stack.push_back(src);
-    cycle[src]=false;
-    return res;
+//     cycle[src]=false;
+//     return res;
 }
 
 // topological sort
+
 bool TopologicalSort()
 {
     vector<bool> vis(graph.size(), false);
-    vector<bool> cycle(graph.size(), false);     // for identifying there is cycle or not in th graph
+    //vector<bool> cycle(graph.size(), false);     // for identifying there is cycle or not in th graph
     vector<int> stack;
-    bool res=false;
+   // bool res=false;
 
     for(int i=0 ;i<graph.size() ;i++)
     {
         if( !vis[i])
         {
              if(  DFS(i, vis, stack , cycle) )
-             res= true ;       //  cycle present
+            // res= true ;       //  cycle present
         }
     }
     // for printing reverse stack 
