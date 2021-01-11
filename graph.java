@@ -384,8 +384,24 @@ public class graph
 
 //****************************************************************//
 //     BFS........
+ ArrayDeque < Pair > queue = new ArrayDeque < > ();
+        queue.add(new Pair(src, src + ""));
+        boolean[] visited = new boolean[vtces];
+        while (queue.size() > 0) {
+            Pair rem = queue.remove();
 
-//BFS shortest path
+            if (visited[rem.v] == true) {
+                continue;
+            }
+            visited[rem.v] = true;
+            System.out.println(rem.v + "@" + rem.psf);
+
+            for (Edge e: graph[rem.v]) {
+                if (visited[e.nbr] == false) {
+                    queue.add(new Pair(e.nbr, rem.psf + e.nbr));
+                }
+            }
+    // iscyclic : 
     public static int BFSShortestPath(int src,int des,boolean[] vis)
     {
         LinkedList <Path> que=new LinkedList<> ();      //declare a LInked List as a queue 
@@ -429,102 +445,7 @@ public class graph
         return cyclec;
     }
  
- //BFS path cycle with length 
- //ie height of graph using 1st method ie using null
-
-    public static void BFSCycleNullHeight(int src,int des,boolean[] vis)
-    {
-        LinkedList <Path> que=new LinkedList<> ();      
-        Path root=new Path(src,0,src+"");
-
-        boolean isPath= false;
-        int cyclec=1;      //cycle counter
-        int level=1;        //level counter
-
-        que.addLast(root);    
-        que.addLast(null);     //add null to the last
-
-        while( que.size() != 1)   //traverse until queue become size is one
-        {
-            Path rpair= que.removeFirst();  
-
-            if(vis[rpair.vtx])        /// for cycle   for this we have to mark the vtx later 
-            {
-                  System.out.println("CYCLE:"+cyclec+"   "+rpair.psf);
-                  cyclec++;
-            }
-
-            vis[rpair.vtx]=true; 
-
-            if(rpair.vtx == des && !isPath)   //if w ereach at destintion print the height
-            {
-                 System.out.println("LEVEL :"+ level);
-                 isPath=true;
-            }
-
-            for(Edge e: graph[rpair.vtx])    
-            {
-                if(! vis[e.v])   
-                {
-                    Path pair=new Path(e.v , rpair.wsf + e.w , rpair.psf +"=>"+e.v );
-                    que.addLast(pair);
-                }
-            }
-
-            if(que.getFirst() == null)   // for height using null method if we get null at first
-            {   
-                que.removeFirst();
-                que.addLast(null);
-                level++;
-            }
-
-        }
-    }
-
-
- //BFS length ie height of graph using  2nd method ie using while method
-
-    public static void BFSHeight(int src,int des,boolean[] vis)
-    {
-        LinkedList <Path> que=new LinkedList<> ();      
-        Path root=new Path(src,0,src+"");
-
-        boolean isPath= false;
-        int level=1;        //level counter
-
-        que.addLast(root);    
-
-        while( !que.isEmpty())   //traverse until queue is empty
-        {   
-            int size=que.size();     //define size of que
-            while(size > 0)
-            {
-                Path rpair= que.removeFirst();  
-
-            vis[rpair.vtx]=true; 
-
-            if(rpair.vtx == des && !isPath)   //if w ereach at destintion print the height
-            {
-                 System.out.println("LEVEL :"+ level);
-                 isPath=true;
-            }
-
-            for(Edge e: graph[rpair.vtx])    
-            {
-                if(! vis[e.v])   
-                {
-                    Path pair=new Path(e.v , rpair.wsf + e.w , rpair.psf +"=>"+e.v );
-                    que.addLast(pair);
-                }
-            }
-            size--;
-            }
-            level++   ;  //increment level
-        }
-    }
-
-// to find the no of connected components in a graph
-public static int GCC(int src,int des,boolean [] vis)
+ public static int GCC(int src,int des,boolean [] vis)
 {
     int len=0;
     for(int i=0;i<graph.length ;i++)
@@ -539,8 +460,11 @@ public static int GCC(int src,int des,boolean [] vis)
 }
 
 //***************************************************//
-// Bipartite graph if a graph can be divided into two sets in which there is no edge between vertecies of one set den its is a bipartiate graph for particular k
- 
+// Bipartite graph if a graph can be divided into two sets in which there is no edge 
+// between vertecies of one set ie all edges are across sets
+// 2 mutually exhaustive and exclusive sets
+// no cycle =bipart , cycle(odd length = no bipart), even = bipart
+    
 //  public static class BPair    // Bipartite class
 //     {
 //         int vtx=-1;
@@ -593,71 +517,187 @@ public static int GCC(int src,int des,boolean [] vis)
 
 //     return res;
 // }
+ HashMap < Integer, Integer > visited = new HashMap < > ();
+        for (int v = 0; v < vtces; v++) {
+            if (!visited.containsKey(v)) {
+                boolean bip = IsBipartite(graph, v, visited);
+                if (!bip) {
+                    System.out.println(false);
+                    return;
+                }
+            }
+        }
 
-  //bipartiate graph
-    public static class Bipart
-    {
-        int vtx=0;
-        boolean ch;
+        System.out.println(true);
+    }
 
-        Bipart()
-        { }
+    static class Pair {
+        int vtx;
+        int level;
 
-        Bipart(int vtx,boolean ch)
-        {
-            this.vtx=vtx;
-            this.ch=ch;
+        Pair(int vtx, int level) {
+            this.vtx = vtx;
+            this.level = level;
         }
     }
 
-     public static  void Bipartiate(int src)
-     {
-          LinkedList<Bipart> que= new LinkedList<>();  
+    public static boolean IsBipartite(ArrayList < Edge > [] graph, int src, HashMap < Integer, Integer > visited) {
+        ArrayDeque < Pair > queue = new ArrayDeque < > ();
+        queue.add(new Pair(src, 0));
+        while (queue.size() > 0) {
+            Pair rem = queue.remove();
 
-        boolean[] vis=new boolean[graph.length];     //mark them visited 
-        boolean[] prevclr=new boolean[graph.length];
-
-        //add src to queue
-        Bipart broot=new Bipart(src,true);   
-        que.addLast(broot);
-        
-        while(que.size() >0)
-        {
-            Bipart bpair=que.removeFirst(); 
-
-             if( vis[bpair.vtx] == true  )
-            {
-                if(prevclr[bpair.vtx] != bpair.ch)
-               { 
-                System.out.println(" Not Bipartitite" );
-                return;
-               }
-               else
-               {
-                   continue;
-               }
-
+            if (visited.containsKey(rem.vtx)) {
+                if (visited.get(rem.vtx) % 2 != rem.level % 2) {
+                    return false;
+                }
+            } else {
+                visited.put(rem.vtx, rem.level);
             }
 
-            vis[bpair.vtx]=true;
-            prevclr[bpair.vtx]=bpair.ch;
-
-            for(Edge e:graph [bpair.vtx])  //nbr
-            {
-                if(!vis[e.v])           //unmark nbr
-                {
-                    Bipart npair=new Bipart(e.v,!bpair.ch);
-                    que.addLast(npair);
+            for (Edge e: graph[rem.vtx]) {
+                if (!visited.containsKey(e.nbr)) {
+                    queue.add(new Pair(e.nbr, rem.level + 1));
                 }
             }
-
         }
-        System.out.println("Bipartitite") ;
 
-     }
+        return true;
+    }
+////////////////////////
+ //Dijikstra Algorithm : All source shortest path
+ // O(E log V) 
+ static class Pair implements Comparable < Pair > {
+        int v; String psf; int wsf;
+        Pair(int v, String psf, int wsf) {
+            this.v = v;
+            this.psf = psf;
+            this.wsf = wsf;
+        }
+     public int compareTo(Pair o) return this.wsf - o.wsf;
+    }
+ PriorityQueue < Pair > queue = new PriorityQueue < > ();
+        queue.add(new Pair(src, src + "", 0));
+        boolean[] visited = new boolean[vtces];
+        while (queue.size() > 0) {
+            Pair rem = queue.remove();
 
+            if (visited[rem.v] == true) {
+                continue;
+            }
+            visited[rem.v] = true;
+            System.out.println(rem.v + " via " + rem.psf + " @ " + rem.wsf);
 
-//*************************************************//
+            for (Edge e: graph[rem.v]) {
+                if (visited[e.nbr] == false) {
+                    queue.add(new Pair(e.nbr, rem.psf + e.nbr, rem.wsf + e.wt));
+                }
+            }
+        }
+    }
+//Prims Algorithm 
+// MST : subgraph, tree(connected , Acyclic), spanning(all vtx)
+// vtx = vtx , pvtx = vtx , wt = wt
+
+class Primpair
+{
+    public:
+    int vtx=-1, pvtx=-1 , wt=-1, wsf=-1 ;
+    string psf="";
+    // same as dijikstra only wt pe PQ banege
+    bool operator < (const Primpair  & o ) const   
+    {
+        return this->wt > o.wt ;  
+    }
+};
+
+void PrimGraph(int src ,int des, vector <bool> & vis)
+{
+    priority_queue <Primpair> que;   // make a que for dijikpair 
+    Primpair root(src,-1,0,0,to_string(src)+"");       // initialize the que by adding root
+    que.push(root);                                      
+
+    while(que.size()>0)
+    {
+        Primpair rpair= que.top();   // extract top elemnt in rpair
+        que.pop();                    // remove the element
+
+        if(vis[rpair.vtx])            // if vtx is already visited   ie cycle
+        continue;
+
+        if(vis[rpair.vtx] != -1)        // for making an spanning tree graph
+        addEdge2(rpair.vtx , rpair.pvtx , rpair.wt);
+ 
+        if(rpair.vtx == des)                 // if we reach at dest
+        cout<<"MINIMUM wt Path:   "<< rpair.psf<<" @ wt  "<< rpair.wsf<<endl;
+
+        vis[rpair.vtx]=true;           //mark that vtx 
+
+        for(Edge * e: graph[rpair.vtx])
+        {
+            if( ! vis[e->v] )
+            {
+                Primpair npair(e->v , rpair.vtx , e->w , rpair.wsf + e->w , rpair.psf+" ->"+ to_string(e->v));
+                que.push(npair);
+            }
+        }
+    }
+     display2();
+}
+// //Kruskal Algorithm
+
+ vector<int> par(graph.size());
+ vector<int> size(graph.size(),1);
+
+int Find(int  vtx)           //find function to find the par+ent of the vertex
+{
+    if(par[vtx] != vtx)
+      par[vtx]= Find(par[vtx]);      // perform recusion to find the super parent it also perform compression
+
+     return par[vtx];
+} 
+
+void Union(int v1 , int v2 )        
+{
+    if( size[v1 ] <= size[ v2 ] )
+    {
+         par[v1] = v2 ;
+         size[v2] += size[v1] ;
+    }
+    else
+    {
+        par[v2] = v1 ;
+         size[v1] += size[v2] ;
+    }
+}
+
+void KruskalGraph()
+{
+    for(int i=0 ; i< graph.size() ;i++)
+    {
+        par[i]=i;
+    }
+
+    Kpair root();       // initialize the que by adding root
+    que.push(root);  
+
+    while(que.size()>0)
+    {
+        Kruskalpair rpair= que.top();
+        que.pop();
+
+        int a=Find(rpair.vtx);
+        int b=Find(rpair.pvtx);
+        if(a != b)
+        {
+            addEdge2(rpair.vtx, rpair.pvtx , rpair.wt );
+            Union(a,b);
+        }
+    }
+    display2();
+    
+}
+ /*************************************************//
 //Articulation points
 
 public static int time=0;
