@@ -5,7 +5,8 @@
 
    construct BST :
    low , mid , high ie node.left.data < node.data < node.right.data
-    
+ 
+ // for sorted array
 public static Node construct2(Integer[] arr , lo , hi ) {
     
     if( lo > hi ) return null ; 
@@ -16,7 +17,24 @@ public static Node construct2(Integer[] arr , lo , hi ) {
     Node root = new Node( arr[mid] , l , r );
     return root;
   }
-
+// for unsorted node
+void insert(node ** pRoot, int val)
+{
+    if(*pRoot == NULL)
+        *pRoot = new node(val);
+    else if((*pRoot)->value <= val)
+        insert(&((*pRoot)->pRight), val);
+    else if((*pRoot)->value > val)
+        insert(&((*pRoot)->pLeft), val);
+}
+ 
+node * getBST(int * arr, int size)
+{
+    node * pRoot = NULL;
+    for(int i = 0; i < size; i++)
+        insert(&pRoot, arr[i]);
+    return pRoot;
+}
 */
 
 // size , sum , min , max , find
