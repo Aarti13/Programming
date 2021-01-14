@@ -138,7 +138,24 @@ int Dictionary( string ques,string ans)
     }
     return c;
 }
+   // flood fill
+    public static void floddfill( int sr ,int sc , int [][] maze , String psf)
+    {
+         if(sr == maze.length - 1 && sc == maze[0].length - 1)
+        {
+            System.out.println(psf+" ");
+            return;
+        }
+        maze[sr][sc]=2;
 
+        // T L D R
+        if(sr>0 &&  maze[sr-1][sc]!=1 &&  maze[sr-1][sc]!=2 ) floddfill( sr-1, sc , maze , psf +"T");
+        if(sc>0 &&  maze[sr][sc-1]!=1 &&  maze[sr][sc-1]!=2 ) floddfill( sr, sc-1 , maze , psf +"L");
+        if(sr<maze.length-1 &&  maze[sr+1][sc]!=1 &&  maze[sr+1][sc]!=2 )floddfill( sr+1, sc , maze , psf +"D");
+        if(sc<maze[0].length-1 &&  maze[sr][sc+1]!=1 &&  maze[sr][sc+1]!=2 ) floddfill( sr, sc+1 , maze , psf +"R");
+
+        maze[sr][sc]=0;
+    }
 //all permutation of abc ie 3!  abc  acb  bac  bca  cab  cba  6
 int permu(string ques,string ans)
 {
