@@ -402,6 +402,7 @@ public class Main {
       head= tail;
       tail= temp;
     }
+  
   //O(n) space const
   // right ko parameter rakha stcak mein banegaa
   // left ko node banya heap mein banegaa
@@ -425,7 +426,35 @@ public class Main {
             pleft = head;
             return IsPalindromeHelper(head);
         }
-  
+   
+  // k folds
+  private void foldHelper(Node right , int fold){
+        
+        if(right == null ) return ;
+        foldHelper(right.next , fold+1 );
+        
+        if( fold > size()/2 ) {
+             Node temp = fleft.next;
+            right.next = temp;
+            fleft.next = right;
+            fleft = temp;
+        }
+        else if( fold == size()/2 ){
+            
+            tail=right;
+            tail.next = null;
+        }
+    
+    }
+    
+    Node fleft = null; //fold left
+    public void fold() {
+      fleft = head;
+      foldHelper(head , 0);
+    
+    }
+  }
+//////////
           public static int findIntersection(LinkedList one, LinkedList two) {
             Node on = one.head;
             Node tn = two.head;
