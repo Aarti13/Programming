@@ -533,6 +533,42 @@ public class Main {
       return dc;
   }
 
+	// preorder an pot order
+	 public static void IterativePreandPostOrder(Node node) {
+    
+    // use stack in which node with state recide  for pre and post order
+    // if state == -1 preorder st++
+    // if state == child.size() postorder pop
+    // if state between (1 - child.size()-1 ) push st++;
+   
+    Stack<Pair> st = new Stack();
+    st.push(new Pair(node , -1 ));
+    
+    String pre ="";
+    String post ="";
+     
+    while(st.size()>0 ){
+        
+        Pair val = st.peek();
+        if( val.state == -1 ){
+            pre += val.node.data +" ";
+            val.state++;
+        }
+        else if( val.state == val.node.children.size() ){
+            post += val.node.data +" ";
+            st.pop();
+        }
+        else{
+            st.push( new Pair( val.node.children.get(val.state), -1));
+            val.state++;
+        }
+    }
+    
+    System.out.println(pre);
+    System.out.println(post);
+  }
+
+	
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
