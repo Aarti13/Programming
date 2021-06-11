@@ -428,41 +428,45 @@ public class Main {
 
 // Node predecessor and successor;
 
-  static Node predecessor;
+	//trick used id tarvel and change 
+	// ie heap variables are not changed 
+	//stack variables will be changed
+  static Node predecessor;  //default null values 
   static Node successor;
-  static int size = 0;
+  static int state ;
   public static void predecessorAndSuccessor(Node node, int data) {
-    if( size == 0){
-        if( node.data == data ) size = 1;
-        else {
-            predecessor = node;
-        }
+    
+    if(state == 0 ){
+       if(node.data == data ) state=1;
+       else predecessor = node;
     }
-    else if( size == 1){
+    else if( state == 1) {
         successor = node;
-        size = 2;
+        state = 2;
     }
     
-    for( Node ch: node.children ){
-        predecessorAndSuccessor(ch , data);
+    for( Node child : node.children ){
+        predecessorAndSuccessor(child , data );
     }
   }
-
+	
+/////////////////////// ceil and floor
   static int ceil = Integer.MAX_VALUE; // smallest among largest
   static int floor = Integer.MIN_VALUE; // largest among smallest
-  
   public static void ceilAndFloor(Node node, int data) {
-   
-    if( node.data > data ) {
-        if( ceil > node.data )
-            ceil = node.data ;
+    
+    if( node.data > data) // ie all elements that are graeter than data 
+    {
+        if( ceil > node.data ) ceil = node.data; // add ele which are smallest in all greater elements
     }
-    if( node.data < data ) {
-        if( floor < node.data )
-            floor = node.data ;
+    if( node.data < data) // ie all elements that are smaller than data 
+    {
+        if( floor < node.data ) floor = node.data;// add ele which are largest in all smallest  elements
     }
     
-    for(Node ch : node.children) ceilAndFloor(ch , data);
+    for(Node child : node.children ){
+        ceilAndFloor(child , data);
+    }
   }
 
 // kth largest ele
@@ -492,7 +496,7 @@ public class Main {
         int sum = 0;
         
         for (Node child : node.children) {
-          int csum +=  NodeSum(child);
+          int csum =  NodeSum(child);
 	  sum += csum;
         }
 	sum += node.data ;
@@ -503,6 +507,31 @@ public class Main {
         return sum;
     }
 
+///////////diameter of a tree
+	
+  static int dia = 0;
+  public static int diameter(Node node){
+      
+     int dc = -1 ;
+     int sdc = -1 ;
+      for(Node child:node.children){
+          int res = diameter(child);
+          if( res > dc ){
+          
+          sdc = dc;
+          dc = res;
+        }
+          else if(res > sdc){
+            sdc = res;
+          }
+      }
+
+      int val = dc + sdc + 2;
+      if( val > dia ) dia = val ;
+      
+      dc += 1;
+      return dc;
+  }
 
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
