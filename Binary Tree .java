@@ -141,6 +141,21 @@ public class Main {
         System.out.println();
     }
   }
+  
+  //////////// In , Post , PRE
+    static String pre ="";
+    static String in ="";
+    static String post ="";
+  public static void iterativePrePostInTraversal(Node node) {
+    if(node == null ) return ;
+    
+    pre += node.data + " ";
+    iterativePrePostInTraversal(node.left);
+    in += node.data + " ";
+    iterativePrePostInTraversal(node.right);
+    post += node.data + " ";
+  }
+  
 // IN , PRE , POST
   public static void iterativePrePostInTraversal(Node node) {
         Pair rtp = new Pair(node, 1);
@@ -233,7 +248,6 @@ public class Main {
   }
   
  ////////// path to leaf from root in given range 
-
   public static void pathToLeafFromRoot(Node node, String path, int sum, int lo, int hi){
         
         if( node == null ) return ;
