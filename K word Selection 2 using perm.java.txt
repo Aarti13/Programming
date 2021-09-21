@@ -1,0 +1,38 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+  public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        String str = sc.nextLine();
+        int k = sc.nextInt();
+        
+        HashSet<Character> unique = new HashSet<>();
+        String ustr = "";
+        for (char ch : str.toCharArray()) {
+          if (unique.contains(ch) == false) {
+            unique.add(ch);
+            ustr += ch;
+          }
+        }
+
+        combination(-1,ustr,0,k,"");
+  }
+    // abcde : --- -> a-- , -b- , --c
+    //               a-- -> ab , ac
+    //level pe : places
+    //option mein string char
+	// combination using permutation
+    public static void combination(int idx, String str,int cs, int ts , String asf){
+        
+        if( cs==ts){
+            System.out.println(asf);
+            return;
+        }
+        for( int i =idx+1 ; i<str.length() ; i++ ){
+            char ch = str.charAt(i);
+            combination(i,str,cs+1,ts,asf+ch);
+        }
+    }
+}
