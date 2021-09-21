@@ -1,0 +1,35 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static int NthPalindromicBinary(int n) {
+        // length bit ka kitne no of palindromic binary no banengee
+        // 1 - 1            
+        // 2 - 11
+        // 3 - 101
+        // 4 - 111
+        // 5 - 1001
+        // 6 - 1111
+        // 7 - 10001
+        // 8 - 10101
+        // 9 - 11011
+        // 10 -11111
+        // length - no of plaindrome for that length :1 - 1, 2 - 1,3-2 , 4-2,5-4,6-4,7-8,8-8         
+        // for l length - 2^(l-1)/2 palindrome.
+        
+        ////////////////////////////////////////
+        //find n prsent in which length group 
+        // then find the offset no for n
+        // then length l , offset o 
+        // eg n = 19 : l=7 , o=4 => ------- => 1100001
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        System.out.println(NthPalindromicBinary(n));
+    }
+
+}
